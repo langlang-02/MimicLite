@@ -1,0 +1,78 @@
+ProjectName: default
+RuntimeConfig:
+  Image:
+    Type: Prebuild
+    Url: vemlp-cn-beijing.cr.volces.com/preset-images/pytorch:2.10.0-cu12.9.1-py3.11-ubuntu22.04
+  Framework: Custom
+  Command: 'set -euo pipefail
+
+    exec bash /DRoboticsAILab/zhaohui.yang/MimicLite/local/mjlab/releases/latent-flat-4xa800-20261003T151443Z/local/mjlab/volc_entrypoint.sh'
+  Envs:
+  - Name: RVQ_DATA_ROOT
+    Value: /EFS/users/zhaohui.yang/dataset/mimiclite-rvq-tracking/rot6d68_ep499_v1
+    IsPrivate: false
+  - Name: MIMICLITE_MOTION_CACHE_BASE
+    Value: /EFS/users/zhaohui.yang/dataset/mimiclite-fk-cache
+    IsPrivate: false
+  - Name: RL_RUN_DIR
+    Value: /EFS/users/zhaohui.yang/dataset/mimiclite-runs/latent-flat-4xa800-20261003T151443Z
+    IsPrivate: false
+  - Name: PPO_OVERRIDES_FILE
+    Value: /DRoboticsAILab/zhaohui.yang/MimicLite/local/mjlab/releases/latent-flat-4xa800-20261003T151443Z/local/mjlab/ppo_4xa800_defaults.txt
+    IsPrivate: false
+  - Name: MIMICLITE_NPROC_PER_NODE
+    Value: '4'
+    IsPrivate: false
+  - Name: MIMICLITE_SMOKE_CHECKPOINT
+    Value: /DRoboticsAILab/zhaohui.yang/MimicLite/local/mjlab/records/latent-checkpoints/checkpoint_2.pt
+    IsPrivate: false
+  - Name: PYTHONUNBUFFERED
+    Value: '1'
+    IsPrivate: false
+ResourceConfig:
+  ResourceQueueId: q-20260706191152-scrkm
+  Roles:
+  - Name: worker
+    Replicas: 1
+    Resource:
+      Type: Flexible
+      InstanceTypeId: ''
+      FlexibleResourceClaim:
+        Cpu: 32
+        MemoryGiB: 256
+        GpuType: NVIDIA-A800-SXM4-80GB
+        Family: ml.hpcpni2l
+        GpuCount: 4
+        RdmaEniCount: 0
+      ZoneId: cn-beijing-b
+    NodeAffinitySpec: {}
+  Preemptible: false
+  Priority: 4
+  ResourceReservation: false
+  OnlyUseSuspectedNode: false
+  MaxRuntimeSeconds: 604800
+  HoldingTimeSeconds: 0
+StorageConfig:
+  Storages:
+  - Type: Vepfs
+    MountPath: /DRoboticsAILab/zhaohui.yang/MimicLite
+    Config:
+      Vepfs:
+        Id: vepfs-cnbjf7015ef11e9c
+        SubPath: zhaohui.yang/MimicLite
+        FileSystemName: DRoboticsAILab
+        HostPath: /mnt/vepfs-cnbjf7015ef11e9c
+    ReadOnly: false
+  - Type: Efs
+    MountPath: /EFS
+    Config:
+      Efs:
+        Id: efs-cnbjc8a589e0f6d6f
+        Addr: cnbjc8a589e0f6d6f.3psq7ep69ltkw6csxyuomq6f5.efs.ivolces.com:/
+        FileSystemName: DRoboticsAILab
+    ReadOnly: false
+ObservableConfig: {}
+Name: latent-flat-4xa800-20261003t151443z
+Description: G1 RVQ latent PPO; flat_ground_v1; 4xA800 80GB; 2048 env/GPU; original
+  PPO defaults. Frozen source with mounted Python 3.12 environment; NCCL and cache/inference
+  preflight before PPO.

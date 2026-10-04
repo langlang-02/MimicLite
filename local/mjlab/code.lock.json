@@ -1,0 +1,39 @@
+{
+  "repositories": {
+    ".": "3963976de8778d9292305fc8efacbcae79ed6685",
+    "active-adaptation": "faea67554b318798f5e8b1ca4f4d0f3d28df12e6",
+    "mimic-lite": "58f06db7078f0ad6477f4c6625363542836fa15d"
+  },
+  "files": {
+    ".dockerignore": "4dde4c6cc0053e71cdfde6f7ef4fd8d97aa131111a04589f6726b29a63fac73b",
+    "local/mjlab/.gitignore": "4140f77bddda8406a3024989e99d9042ef7b1d78cc33b88c2af28ec5523b2c34",
+    "local/mjlab/Dockerfile": "fd1fdc6a3b5fbac51a9167b360834fd4ef635b9b289955a47048a580fb48a6d3",
+    "local/mjlab/LATENT_RL.md": "ad6c68c91dba9e0d4ca6dc4a51a7ed6b58d2e05fa68fdfad9a8ea812ac0ca69c",
+    "local/mjlab/README.md": "6556506fb6ba23a696415425cd2d7b894ce3b28eadb93f5506d2375a97a65af4",
+    "local/mjlab/assets.lock.json": "49702311dd0585c7cb0de0e88dab1a26078eb1fa9e97369e4f3c3e01a25dec60",
+    "local/mjlab/bootstrap.sh": "ddef4aaadc2ee8f775842042e9f5de93078594dbf4d209959ee5fe00125f5f55",
+    "local/mjlab/env.sh": "ddba2776ebc38ed88fcf3c2f4d3c1013c5912a83f562f7c2adecec3db24713c8",
+    "local/mjlab/fetch_assets.py": "292d54c7cdd12933a212aeb9ae136676a4b61c1f9079118787688c3ba7ab82f0",
+    "local/mjlab/platform_entrypoint.sh": "4c643c66a0a880a890db53efddb2d1c0b4854985bb1b91ab021a92f1efee4d24",
+    "local/mjlab/prepare_reference.py": "b2791cbbb8d0d52949c54c7b1502d60145170b00458e98ca218202cdfb5994ca",
+    "local/mjlab/requirements.in": "ed67760386d1d8e7640df5fb35f8198c011e6c3e20fac41358424e44a39ffa1e",
+    "local/mjlab/requirements.lock": "298dd1fdb2ea5e97ec8c01ad59460294cbd4ca96bb2f1794469169e2796de3a5",
+    "local/mjlab/smoke.sh": "b658ec9ca4c590666d6effc8b6fdf9c932bf6d1b54dc4c493be1276fede059b7",
+    "local/mjlab/validate_rvq_data.py": "651912d2f6833cdbf43a5c18efe2aa451a38707e202545276425164158015469",
+    "local/mjlab/verify_latent_runtime.py": "cbb5611f6024a0a2e5be7cae5174174d756ff0200000b4d57974df410d117d3f",
+    "local/mjlab/verify_reload.py": "00b9a127c5f5b5ce57add884643636936b1c2d82d9743e698a4eb7f2e2354c54",
+    "mimic-lite/cfg/task/observation/command/rvq_latent.yaml": "d1125085c6d4ea737c480fd7a50d6e1b741b38094d4e801e2812bc2d3ca0214a",
+    "mimic-lite/mimic_lite/tasks/command.py": "72509854676eb6ba1da313a3946c916ee346d0e2c2d6f728046c33716f612cb7",
+    "mimic-lite/mimic_lite/tasks/motion.py": "624c556d0909b9cfa29f0d16299c65e0641f957f6901f18bc0c81f5476b239c1",
+    "mimic-lite/mimic_lite/tasks/observations/track.py": "b0b3ed045465f3149692c902f78ba617f9648662d23d54ace5ef3b61412521f0",
+    "mimic-lite/mimic_lite/tasks/rvq_conversion.py": "5e48c78aa50d2377ff8aba15668d7bcdd315e71fa2b8cf07f6211796e4877742",
+    "mimic-lite/mimic_lite/tasks/rvq_latent.py": "ce7f82dd8519a0340c183005eac93a8d611b1091693e972ca69d830c58f74420",
+    "mimic-lite/mimic_lite/tasks/windowed_cache.py": "ff056f9d048f49f180cacb9d41903420de7fbcfe7cabfc47d9b224d80da07ec1",
+    "mimic-lite/scripts/convert_rvq_tracking_dataset.py": "5c6c2889a3fa813470ac00dca94a01bdbffc558542faf2089cfecbb689d4313c",
+    "mimic-lite/tests/test_rvq_conversion.py": "4e806cdd1f9669d9cb9b6e6a5d4eefb1e23708d27356fc7732c5501bb5597734",
+    "mimic-lite/tests/test_rvq_latent.py": "28559af69f9ad24bea2e18dca9b75f499e82559e46a04e48578ade5a933ce771",
+    "local/mjlab/ppo_4xa800_defaults.txt": "6a834019896cf1eac6f17dd9eae3de1ea962a87f5c68130c8e2545afd5b77103",
+    "local/mjlab/verify_nccl.py": "59a39c574e459b3da52a8b41ca1fe71079495172ce041416dcba3d5691a1e044",
+    "local/mjlab/volc_entrypoint.sh": "d3b14da7081491534338f1f1e9ea7cb0badcbf35f75b142d23b00736cd7dff7c"
+  }
+}

@@ -1,0 +1,4 @@
+-e ./active-adaptation[mjlab]
+-e ./mimic-lite
+any4hdmi @ git+https://github.com/EGalahad/any4hdmi.git@bc83d6c96935028c5448e6f2c7bb918021e26790
+mujoco<3.8

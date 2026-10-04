@@ -1,0 +1,9 @@
+**/.git
+**/.cache
+**/.venv
+**/__pycache__
+local/mjlab/records
+local/mjlab/synthetic
+sim2real
+**/outputs
+**/wandb
