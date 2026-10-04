@@ -4,8 +4,8 @@
 	branch = dev/hdmi
 [submodule "mimic-lite"]
 	path = mimic-lite
-	url = git@github.com:EGalahad/mimic-lite.git
-	branch = main
+	url = https://github.com/langlang-02/mimic-lite.git
+	branch = feat/rvq-latent-tracker
 [submodule "sim2real"]
 	path = sim2real
 	url = git@github.com:EGalahad/sim2real.git
