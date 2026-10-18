@@ -1,0 +1,27 @@
+# Four GPUs; 4096 environments per process, 16384 total; 1144 iterations.
+# Other values below freeze current train.yaml / PPOConfig defaults.
+task.num_envs=4096
+algo.train_every=32
+algo.ppo_epochs=3
+algo.num_minibatches=8
+algo.lr=0.0003
+algo.desired_kl=0.01
+algo.clip_param=0.2
+algo.gamma=0.99
+algo.lmbda=0.95
+algo.opt=muon
+algo.entropy_coef_start=0.004
+algo.entropy_coef_end=0.004
+algo.actor_hidden_dims=[512,512,512]
+algo.critic_hidden_dims=[1024,512,256]
+algo.max_grad_norm=1.0
+algo.grad_sync_mode=manual
+algo.compile=false
+total_frames=599785472
+total_iters=1144
+checkpoint_interval=50
+upload_interval=500
+checkpoint_path=null
+seed=42
+wandb.mode=online
+exp_name=latent-4xa800-4096envs-1144iters

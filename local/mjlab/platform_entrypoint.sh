@@ -43,7 +43,7 @@ if (( workers > 1 )); then
   launcher+=( -m torch.distributed.run --standalone "--nproc_per_node=$workers" )
 fi
 exec "${launcher[@]}" mimic-lite/scripts/train.py \
-  backend=mjlab headless=true wandb.mode=disabled \
+  backend=mjlab headless=true "wandb.mode=$WANDB_MODE" \
   task=tracking-base task/observation/command=rvq_latent '~task/motion' \
   "task.command.motion_cfgs={rvq:{path:$RVQ_DATA_ROOT,weight:1.0,full_motion:false,filenames_path:flat_ground_v1/train.txt}}" \
   "+task.command.rvq_latent_path=$RVQ_DATA_ROOT/latent" \

@@ -7,6 +7,23 @@ export ANY4HDMI_CACHE_BUILD_BATCH_SIZE=2048
 export TORCHINDUCTOR_COMPILE_THREADS=2
 mkdir -p "$RL_RUN_DIR/preflight"
 exec > >(tee -a "$RL_RUN_DIR/launcher.log") 2>&1
+echo "Stage: EGL/GL system libraries (before framework imports)"
+# active_adaptation imports torchrl, which imports MuJoCo and loads EGL.
+check_gl_libraries() {
+  python -c "import ctypes; ctypes.CDLL('libEGL.so.1'); ctypes.CDLL('libGL.so.1')"
+}
+if ! check_gl_libraries; then
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libegl1 libgl1 libglib2.0-0
+fi
+# Recheck in a fresh process after installation; fail here if still unavailable.
+check_gl_libraries
+python - <<'PY'
+import mujoco
+from OpenGL import EGL
+assert callable(EGL.eglQueryString)
+print('EGL symbols and MuJoCo import: PASS', mujoco.__version__)
+PY
 echo "Stage: environment and frozen code verification"
 python - <<'PY'
 import hashlib, importlib.util, json, os, sys
@@ -27,11 +44,6 @@ for group in d.values():
         project['enabled'] = name == 'mimic_lite'
 p.write_text(json.dumps(d, indent=2)+'\n')
 PY
-# The preset image may omit EGL runtime libraries; install only when absent.
-if ! python -c "import ctypes; ctypes.CDLL('libEGL.so.1'); ctypes.CDLL('libGL.so.1')"; then
-  apt-get update
-  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libegl1 libgl1 libglib2.0-0
-fi
 nvidia-smi
 echo "Stage: four-GPU NCCL preflight"
 python -m torch.distributed.run --standalone --nproc_per_node=4 \
