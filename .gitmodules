@@ -1,7 +1,7 @@
 [submodule "active-adaptation"]
 	path = active-adaptation
-	url = git@github.com:Agent-3154/active-adaptation.git
-	branch = dev/hdmi
+	url = https://github.com/langlang-02/active-adaptation.git
+	branch = feat/mimiclite-latent-experiments
 [submodule "mimic-lite"]
 	path = mimic-lite
 	url = https://github.com/langlang-02/mimic-lite.git
