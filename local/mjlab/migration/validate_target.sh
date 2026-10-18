@@ -6,21 +6,7 @@ source "$MIMICLITE_ROOT/local/mjlab/.env.local"
 base="${MIMICLITE_TARGET_BASE:-/data/langlang}"
 record="$base/transfer/validation"
 mkdir -p "$record"
-exec > >(tee -a "$record/console.log") 2>&1
-echo 'Waiting for verified dataset and runtime artifacts'
-until [[ -f "$base/transfer/rvq-dataset-20261006/verification.json" && -f "$base/transfer/runtime-artifacts.verified" ]]; do sleep 30; done
-echo 'Building full FK cache on CPU'
-python "$MIMICLITE_ROOT/local/mjlab/migration/build_full_cache.py"
-python "$MIMICLITE_ROOT/local/mjlab/test_motion_index.py"
-python "$MIMICLITE_ROOT/mimic-lite/tests/test_ppo_diagnostics.py"
-checkpoint="$base/checkpoints/mimiclite/train1024-entropy-2500.pt"
 export CUDA_VISIBLE_DEVICES="${MIMICLITE_GPU_IDS:-4,5,6,7}"
-export MIMICLITE_NPROC_PER_NODE=4
-export RL_RUN_DIR="$base/runs/mimiclite/full-data-smoke-$(date -u +%Y%m%dT%H%M%SZ)"
-export PPO_OVERRIDES_FILE="$record/smoke.txt"
-export WANDB_MODE=disabled
-python "$MIMICLITE_ROOT/local/mjlab/migration/full_training.py" --checkpoint "$checkpoint" --output "$PPO_OVERRIDES_FILE" --iterations 10 --wandb-mode disabled
-python "$MIMICLITE_ROOT/local/mjlab/migration/full_training.py" --checkpoint "$checkpoint" --output "$record/full-2500.txt" --wandb-mode "${MIMICLITE_TRAIN_WANDB_MODE:-offline}"
 wait_free_gpus() {
 echo "Waiting for GPUs $CUDA_VISIBLE_DEVICES to have no compute processes and <1 GiB allocated"
 while ! python - <<'PY'
@@ -34,6 +20,24 @@ raise SystemExit(0 if all(int(mem) < 1024 and uuid.strip() not in busy for _,uui
 PY
 do sleep 60; done
 }
+exec > >(tee -a "$record/console.log") 2>&1
+echo 'Waiting for verified dataset and runtime artifacts'
+until [[ -f "$base/transfer/rvq-dataset-20261006/verification.json" && -f "$base/transfer/runtime-artifacts.verified" ]]; do sleep 30; done
+cache_device="${MIMICLITE_CACHE_BUILD_DEVICE:-cpu}"
+if [[ "$cache_device" == cuda ]]; then wait_free_gpus; fi
+echo "Building full FK cache on $cache_device"
+python "$MIMICLITE_ROOT/local/mjlab/migration/build_full_cache.py" --device "$cache_device"
+python "$MIMICLITE_ROOT/local/mjlab/test_motion_index.py"
+python "$MIMICLITE_ROOT/mimic-lite/tests/test_ppo_diagnostics.py"
+checkpoint="$base/checkpoints/mimiclite/train1024-entropy-2500.pt"
+export CUDA_VISIBLE_DEVICES="${MIMICLITE_GPU_IDS:-4,5,6,7}"
+export MIMICLITE_NPROC_PER_NODE=4
+export RL_RUN_DIR="$base/runs/mimiclite/full-data-smoke-$(date -u +%Y%m%dT%H%M%SZ)"
+export PPO_OVERRIDES_FILE="$record/smoke.txt"
+export WANDB_MODE=disabled
+python "$MIMICLITE_ROOT/local/mjlab/migration/full_training.py" --checkpoint "$checkpoint" --output "$PPO_OVERRIDES_FILE" --iterations 10 --wandb-mode disabled
+python "$MIMICLITE_ROOT/local/mjlab/migration/full_training.py" --checkpoint "$checkpoint" --output "$record/full-2500.txt" --wandb-mode "${MIMICLITE_TRAIN_WANDB_MODE:-offline}"
+
 wait_free_gpus
 echo 'Starting 4 × 8192 full-data smoke training'
 bash "$MIMICLITE_ROOT/local/mjlab/train_local.sh"

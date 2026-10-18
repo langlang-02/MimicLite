@@ -13,7 +13,8 @@ Set `.env.local` with RVQ_DATA_ROOT, MIMICLITE_MOTION_CACHE_BASE and
 MIMICLITE_RUNS_ROOT. This machine-specific file is ignored by Git.
 
 Run `bash local/mjlab/migration/validate_target.sh` in a persistent Zellij session.
-It waits for transfer verification, builds the 159777-motion FK cache on CPU,
+It waits for transfer verification, builds the 159777-motion FK cache (CPU by default, or an allocated GPU with
+MIMICLITE_CACHE_BUILD_DEVICE=cuda),
 waits for GPUs selected by MIMICLITE_GPU_IDS (default 4–7) to be unoccupied, and runs ten PPO iterations with 8192
 environments per rank. A PASS requires finite metrics and changed actor weights.
 Set MIMICLITE_START_FULL_TRAINING=1 to chain the 2500-iteration formal run after PASS.
