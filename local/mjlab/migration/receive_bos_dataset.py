@@ -1,5 +1,5 @@
 """Receive and verify the existing chunked RVQ dataset export through bcecmd."""
-import argparse, concurrent.futures, hashlib, json, subprocess, tarfile
+import argparse, concurrent.futures, hashlib, json, subprocess, tarfile, time
 from pathlib import Path, PurePosixPath
 
 parser = argparse.ArgumentParser()
@@ -15,7 +15,15 @@ def digest(path):
  return h.hexdigest()
 def download(name):
  dest = staging / name
- subprocess.run(['bcecmd','bos','cp',a.prefix.rstrip('/')+'/'+name,str(dest),'--disable-bar','--yes'],check=True,stdout=subprocess.DEVNULL)
+ for attempt in range(5):
+  with dest.with_suffix(dest.suffix+'.download.log').open('ab') as log:
+   result = subprocess.run(['bcecmd','bos','cp',a.prefix.rstrip('/')+'/'+name,str(dest),'--disable-bar','--yes'],stdout=log,stderr=subprocess.STDOUT)
+  if result.returncode == 0:
+   break
+  print('RETRY', name, 'attempt', attempt + 1, 'exit', result.returncode, flush=True)
+  if attempt == 4:
+   result.check_returncode()
+  time.sleep(min(5 * 2**attempt, 60))
  return dest
 def receive(item):
  meta = json.loads(download(item['archive'].replace('.tar','.json')).read_text())
