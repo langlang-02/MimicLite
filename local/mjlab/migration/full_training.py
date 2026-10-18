@@ -24,15 +24,26 @@ def main():
         records = [json.loads(line) for line in (args.verify_run / 'metrics.jsonl').read_text().splitlines()]
         assert records and records[-1]['iteration'] == args.iterations
         assert all(not row['nonfinite_metrics'] for row in records)
-        final = torch.load(args.verify_run / 'checkpoint_latest.pt', map_location='cpu', weights_only=False)
+        assert records[-1]['env_frames'] == args.workers * args.num_envs * 32 * args.iterations
+        final_path = (args.verify_run / 'checkpoint_latest.pt').resolve()
+        initial = torch.load(final_path.with_name('checkpoint_0.pt'), map_location='cpu', weights_only=False)
+        matched = 0
+        for module in ['actor', 'critic', 'vecnorms']:
+            assert policy[module].keys() == initial['policy'][module].keys()
+            for key, value in policy[module].items():
+                assert torch.equal(value, initial['policy'][module][key]), (module, key)
+                matched += 1
+        final = torch.load(final_path, map_location='cpu', weights_only=False)
         changed = [name for name, value in policy['actor'].items()
                    if not torch.equal(value, final['policy']['actor'][name])]
         assert changed, 'Actor weights did not change'
         assert int(final['cfg'].task.num_envs) == args.num_envs
         assert final['cfg'].task.command.motion_cfgs.rvq.filenames_path == 'flat_ground_v1/train.txt'
         assert not final['cfg'].algo.actor_extra_in_keys
+        assert int(final['policy']['last_iter']) == last_iter + args.iterations - 1
         report = dict(result='PASS', iterations=args.iterations, num_envs_per_rank=args.num_envs,
                       changed_actor_tensors=len(changed), checkpoint=str(args.checkpoint),
+                      matched_warmstart_tensors=matched, workers=args.workers,
                       scope='full-data loading and finite PPO updates; not convergence')
         args.output.write_text(json.dumps(report, indent=2) + '\n')
         print(json.dumps(report))
