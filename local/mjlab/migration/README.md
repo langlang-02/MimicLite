@@ -14,14 +14,14 @@ MIMICLITE_RUNS_ROOT. This machine-specific file is ignored by Git.
 
 Run `bash local/mjlab/migration/validate_target.sh` in a persistent Zellij session.
 It waits for transfer verification, builds the 159777-motion FK cache on CPU,
-waits for GPUs 0–3 to be unoccupied, and runs ten PPO iterations with 8192
+waits for GPUs selected by MIMICLITE_GPU_IDS (default 4–7) to be unoccupied, and runs ten PPO iterations with 8192
 environments per rank. A PASS requires finite metrics and changed actor weights.
-It does not start the 2500-iteration formal run automatically.
+Set MIMICLITE_START_FULL_TRAINING=1 to chain the 2500-iteration formal run after PASS.
 
 After PASS, review `/data/langlang/transfer/validation/full-2500.txt` and launch:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0,1,2,3 \
+CUDA_VISIBLE_DEVICES=4,5,6,7 \
 PPO_OVERRIDES_FILE=/data/langlang/transfer/validation/full-2500.txt \
 WANDB_MODE=offline bash local/mjlab/train_local.sh
 ```
