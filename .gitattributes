@@ -1,0 +1,4 @@
+
+# CSV exports use standard CRLF; patch context contains significant spaces.
+*.csv whitespace=cr-at-eol
+*.patch -whitespace
