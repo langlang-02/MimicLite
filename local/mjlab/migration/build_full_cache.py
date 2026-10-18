@@ -13,6 +13,10 @@ else:
     assert os.environ.get('CUDA_VISIBLE_DEVICES'), 'Explicit GPU allocation is required'
 os.environ['ANY4HDMI_CACHE_BUILD_DEVICE'] = args.device
 
+import active_adaptation as aa
+
+aa.set_backend('mjlab')
+
 from any4hdmi.dataset.loading import resolve_input_paths, resolve_motion_filenames
 from mimic_lite.tasks.windowed_cache import _DirectCache
 
