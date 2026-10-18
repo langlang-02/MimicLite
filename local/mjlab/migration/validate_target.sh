@@ -20,7 +20,7 @@ export RL_RUN_DIR="$base/runs/mimiclite/full-data-smoke-$(date -u +%Y%m%dT%H%M%S
 export PPO_OVERRIDES_FILE="$record/smoke.txt"
 export WANDB_MODE=disabled
 python "$MIMICLITE_ROOT/local/mjlab/migration/full_training.py" --checkpoint "$checkpoint" --output "$PPO_OVERRIDES_FILE" --iterations 10 --wandb-mode disabled
-python "$MIMICLITE_ROOT/local/mjlab/migration/full_training.py" --checkpoint "$checkpoint" --output "$record/full-2500.txt"
+python "$MIMICLITE_ROOT/local/mjlab/migration/full_training.py" --checkpoint "$checkpoint" --output "$record/full-2500.txt" --wandb-mode "${MIMICLITE_TRAIN_WANDB_MODE:-offline}"
 wait_free_gpus() {
 echo "Waiting for GPUs $CUDA_VISIBLE_DEVICES to have no compute processes and <1 GiB allocated"
 while ! python - <<'PY'
@@ -43,7 +43,7 @@ if [[ "${MIMICLITE_START_FULL_TRAINING:-0}" == 1 ]]; then
   wait_free_gpus
   export PPO_OVERRIDES_FILE="$record/full-2500.txt"
   export RL_RUN_DIR="$base/runs/mimiclite/full-data-2500-$(date -u +%Y%m%dT%H%M%SZ)"
-  export WANDB_MODE=offline
+  export WANDB_MODE="${MIMICLITE_TRAIN_WANDB_MODE:-offline}"
   printf '%s\n' "$RL_RUN_DIR" > "$record/formal-run-path.txt"
   bash "$MIMICLITE_ROOT/local/mjlab/train_local.sh"
 fi
