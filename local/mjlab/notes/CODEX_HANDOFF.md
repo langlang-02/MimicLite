@@ -2,11 +2,13 @@
 
 更新时间：2026-10-19。本文件描述已核验事实；GPU 占用、最新运行和 Git 状态在执行前重新检查。目标是让 digua_4090_48 上的新 Codex 独立开展评测、分析和后续训练。
 
-## 交接同步时发现的目录变化（优先处理）
+## 代码恢复状态（2026-10-19 更新）
 
-2026-10-19 最终同步时，目标机主机名仍为 `vm-38gu4g7c-cn-zhangjiakou-ix-p6g5z`，但 `/data/langlang/Project/MimicLite` 只剩 `.cache`，`.git`、代码及原目录内 Python 环境已不在该路径。`git pull` 因而失败。数据目录和本次训练结果目录仍存在。原因未知，可能有其他会话在整理目录，不能假定是数据丢失或擅自覆盖。
+交接时原目录仅剩 `.cache`；现已恢复主仓库和两个子模块至 `/data/langlang/Project/MimicLite`，恢复原 Python 3.12.13 专用环境、本机 `.env.local` 和机器人资产。174 个依赖兼容性检查、66 个锁定文件哈希、3 个动作索引测试通过；159777 条训练动作文件全部存在。最终 checkpoint SHA256 与恢复前一致，W&B 查询为 finished。
 
-下面的仓库及环境路径是训练时已经验证的位置，目前执行命令前必须先定位代码与环境，或与用户确认目录调整情况。不要直接运行下面的 source/train 命令。主仓库远端已经有本说明，可从 `feat/rvq-latent-tracker` 获取；两个子模块远端也已推送。若需要恢复，应先确认新位置并保留现有 `.cache`，避免覆盖其他项目。独立交接副本放在 `/data/langlang/CODEX_HANDOFF.md`，无需仓库即可阅读。
+**GPU 运行验证尚待执行**：恢复结束时 4–7 卡被另一个 `gentrack_momask` 任务占用。验证脚本在占用检查处退出，未启动仿真或新的训练。待用户确认 GPU 可用后，运行 `/data/langlang/transfer/recovery-validate.sh`，它只做 32 步前向/仿真和 NCCL 检查，零 PPO 更新。不要因环境已恢复就声称这次四卡实测已通过，也不要停止其他任务。
+
+完整恢复记录见 `recovery-20261019.md`。独立副本 `/data/langlang/CODEX_HANDOFF.md` 已同步。以下环境与仓库路径现在重新有效。
 
 ## 1. 项目目的与当前结论
 
