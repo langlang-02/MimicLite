@@ -6,7 +6,7 @@
 
 交接时原目录仅剩 `.cache`；现已恢复主仓库和两个子模块至 `/data/langlang/Project/MimicLite`，恢复原 Python 3.12.13 专用环境、本机 `.env.local` 和机器人资产。174 个依赖兼容性检查、66 个锁定文件哈希、3 个动作索引测试通过；159777 条训练动作文件全部存在。最终 checkpoint SHA256 与恢复前一致，W&B 查询为 finished。
 
-**GPU 运行验证尚待执行**：恢复结束时 4–7 卡被另一个 `gentrack_momask` 任务占用。验证脚本在占用检查处退出，未启动仿真或新的训练。待用户确认 GPU 可用后，运行 `/data/langlang/transfer/recovery-validate.sh`，它只做 32 步前向/仿真和 NCCL 检查，零 PPO 更新。不要因环境已恢复就声称这次四卡实测已通过，也不要停止其他任务。
+**GPU 运行验证已通过**：GPU 4–7 空闲后，按原配置完成四卡、每卡 8192 环境的 32 步前向/仿真及 NCCL 检查，四个 rank 均为 PASS。全量 159777 条动作加载正常，41 个初始张量与 checkpoint 精确匹配，Actor/Critic 权重和 checkpoint 文件保持不变，optimizer 更新次数为 0。没有启动新的训练或停止其他任务。最终报告 `/data/langlang/transfer/recovery-final-verification.json`。这是环境恢复验证，不代表新增的跟踪质量或收敛评测。
 
 完整恢复记录见 `recovery-20261019.md`。独立副本 `/data/langlang/CODEX_HANDOFF.md` 已同步。以下环境与仓库路径现在重新有效。
 
