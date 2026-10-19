@@ -2,6 +2,12 @@
 
 更新时间：2026-10-19。本文件描述已核验事实；GPU 占用、最新运行和 Git 状态在执行前重新检查。目标是让 digua_4090_48 上的新 Codex 独立开展评测、分析和后续训练。
 
+## 交接同步时发现的目录变化（优先处理）
+
+2026-10-19 最终同步时，目标机主机名仍为 `vm-38gu4g7c-cn-zhangjiakou-ix-p6g5z`，但 `/data/langlang/Project/MimicLite` 只剩 `.cache`，`.git`、代码及原目录内 Python 环境已不在该路径。`git pull` 因而失败。数据目录和本次训练结果目录仍存在。原因未知，可能有其他会话在整理目录，不能假定是数据丢失或擅自覆盖。
+
+下面的仓库及环境路径是训练时已经验证的位置，目前执行命令前必须先定位代码与环境，或与用户确认目录调整情况。不要直接运行下面的 source/train 命令。主仓库远端已经有本说明，可从 `feat/rvq-latent-tracker` 获取；两个子模块远端也已推送。若需要恢复，应先确认新位置并保留现有 `.cache`，避免覆盖其他项目。独立交接副本放在 `/data/langlang/CODEX_HANDOFF.md`，无需仓库即可阅读。
+
 ## 1. 项目目的与当前结论
 
 基于 MimicLite，为 Unitree G1 训练以冻结 MoMask/RVQ 动作 latent 为条件的 PPO tracker。仿真后端是 mjlab / MuJoCo Warp，不需要启动 Isaac Sim。
